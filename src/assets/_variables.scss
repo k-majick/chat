@@ -1,0 +1,69 @@
+// Colors
+$marvin-color-white-smoke: #f3f3f3;
+$marvin-color-desert-storm: #f0e7de;
+$marvin-color-charcoal: #444444;
+$marvin-color-selective-highlight: #010a3a;
+$marvin-color-selective-yellow: #f9b000;
+$marvin-color-black: #000000;
+$marvin-color-white: #ffffff;
+$marvin-color-alto: #D3D3D3;
+$marvin-color-tundora: #444444;
+$marvin-color-limed-spruce: #364447;
+$marvin-color-alabaster: #f7f7f7;
+$marvin-color-outer-space: #313942;
+$marvin-color-apple: #4aa631;
+$marvin-color-error: #ff453a;
+$marvin-color-lightgrey: #eeeeee;
+$marvin-color-silver: #cccccc;
+$marvin-color-gray: #808080;
+$marvin-color-navy-gray: #414952;
+$marvin-color-iron: #d8dadb;
+$marvin-color-darkgrey: #838383;
+$marvin-color-dusk: #3c5469;
+$marvin-color-blue: #148fcc;
+$evidentiq-green: #7bfcca;
+$evidentiq-green-dark: #14ccad;
+
+$marvin-color-primary: #010a3a;
+$marvin-color-primary-hover: #515c68;
+$marvin-color-secondary-hover: #1A234E;
+
+$marvin-color-highlight: #010a3a;
+$marvin-color-secondary: #999999;
+$marvin-color-text-dark: #313942;
+
+$marvin-color-disabled: #35495e;
+$marvin-color-dark-grey: #212529;
+
+// Z-index
+$z-index: (
+  modal-mask         : 2002,
+  navigation         : 100,
+  footer             : 90,
+  triangle           : 60,
+  navigation-rainbow : 50,
+  share-type         : 41,
+  share              : 40,
+);
+
+$breakpoint_laptop_large: 1620px;
+$breakpoint_laptop_medium: 1440px;
+$breakpoint_laptop_small: 1366px;
+$breakpoint_tablet: 1200px;
+$breakpoint_tablet_middle: 1080px;
+$breakpoint_tablet_small: 992px;
+$breakpoint_mobile: 768px;
+$breakpoint_mobile-middle: 670px;
+$breakpoint_mobile_small: 480px;
+
+$breakpoints: (
+  l: $breakpoint_laptop_large,
+  l-m: $breakpoint_laptop_medium,
+  l-s: $breakpoint_laptop_small,
+  t: $breakpoint_tablet,
+  t-m: $breakpoint_tablet_middle,
+  t-s: $breakpoint_tablet_small,
+  m: $breakpoint_mobile,
+  m-m: $breakpoint_mobile-middle,
+  m-s: $breakpoint_mobile_small,
+);

@@ -1,0 +1,365 @@
+@import "variables.scss";
+
+.chat {
+  $self: &;
+  bottom: 100px;
+  flex: auto;
+  overflow-y: hidden;
+  height: 0;
+
+  &__container {
+    position: absolute;
+    right: 37.5px;
+    bottom: 55px;
+    border-radius: 15px;
+    width: 25px;
+    height: 25px;
+
+    &--expanded {
+      transition: height 0.5s;
+      
+      &.chat__container--open {
+        height: auto;
+
+        #{$self} {
+          overflow-y: scroll;
+          max-height: 640px;
+          min-height: 240px;
+          height: auto;
+        }
+        
+        #{$self}__box {
+          display: flex;
+          flex-direction: column-reverse;
+        }
+
+        #{$self}__bar {
+          position: relative;
+
+          &--main {
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+            border-bottom: 1px solid $marvin-color-alto;
+          }
+  
+          &--input {
+            display: flex;
+          }
+        }
+      }
+    }
+
+    &--open {
+      filter: drop-shadow(0 0px 5px transparentize($marvin-color-black, 0.5));
+      background-color: $marvin-color-white;
+      width: 420px;
+      height: 75px;
+      right: 30px;
+      bottom: 30px;
+
+      #{$self} {
+        padding: 20px 15px 20px 20px;
+      }
+
+      #{$self}__bar {
+        background-color: $marvin-color-lightgrey;
+        height: 75px;
+
+        #{$self}__avatar,
+        #{$self}__title {
+          display: block;
+        }
+
+        #{$self}__controls {
+          position: relative;
+        }
+      }
+    }
+  }
+
+  &__bar {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 25px;    
+    border-radius: 15px;    
+    display: flex;
+    align-items: center;
+
+    &--main {
+      top: 0;
+      z-index: 3;
+    }
+
+    &--input {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      bottom: 0;
+      z-index: 2;
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+      border-top: 1px solid $marvin-color-alto;
+      padding: 7.5px 15px 7.5px 7.5px;
+      
+      #{$self}__input {
+        background-color: $marvin-color-white;        
+        border-radius: 7.5px;
+        height: 100%;
+        width: 100%;
+        padding: 7.5px;
+        outline: 0;
+
+        &:focus {
+          outline: 1px solid $marvin-color-alto;          
+        }
+      }
+
+      #{$self}__control {
+        margin-left: 15px;
+        display: flex;
+        align-items: center;
+        cursor: default;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        &:disabled {
+          cursor: default;
+          pointer-events: none;
+
+          > #{$self}__control--send {
+            opacity: 0.5;
+          }
+        }
+      }
+    }
+
+    #{$self}__avatar {
+      display: none;
+      margin-left: 7.5px;
+      width: 60px;
+      height: 60px;
+      border-radius: 60px;
+      position: relative;
+
+      &::before,
+      &::after {
+        position: absolute;
+        display: none;
+        content: '';
+      }
+
+      &.talking {
+        &::before {
+          content: "";
+          display: block;
+          width: 20px;
+          border: 2px dashed $evidentiq-green;
+          position: absolute;
+          top: 44px;
+          left: 50%;
+          transform: translateX(-50%);
+          animation: blink 0.5s steps(5, start) infinite;
+        }
+      }
+
+      // &::after {
+      //   display: block;
+      //   border-radius: 12.5px;
+      //   width: 12.5px;
+      //   height: 12.5px;
+      //   background-color: $evidentiq-green-dark;
+      //   top: 0;
+      //   right: 0;
+      // }
+    }
+
+    #{$self}__title {
+      display: none;
+      margin-left: 15px;
+    }
+
+    #{$self}__controls {
+      position: absolute;
+      top: 0;
+      margin-left: auto;
+      margin-right: 7.5px;
+      height: 25px;
+    }
+
+    #{$self}__control {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      --fa-primary-color: #{$marvin-color-white};
+      --fa-secondary-color: #{$marvin-color-primary};
+      --fa-primary-opacity: 1;
+      --fa-secondary-opacity: 1;
+    }
+
+    #{$self}__control + #{$self}__control {
+      margin-left: 5px;
+    }
+  }
+  
+  &__avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--user {
+      background-color: $marvin-color-lightgrey;
+      font-size: 0.8em;
+    }
+
+    &--marvin {
+      background-color: $marvin-color-lightgrey;
+      background-image: url('@/assets/marvin-head-min.svg');
+      background-size: 90%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+
+  &__item {
+    border-radius: 15px;
+    padding: 7.5px 15px;
+    position: relative;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+
+    & + & {
+      margin-top: 15px;
+    }
+
+    &--query {
+      margin-left: 40px;
+      background-color: $marvin-color-lightgrey;
+      color: $marvin-color-primary;
+
+      #{$self}__avatar {
+        left: -40px;
+        top: 0;
+      }
+    }
+
+    &--answer,
+    &--error {
+      margin-right: 40px;
+
+      #{$self}__avatar {
+        right: -40px;
+        top: 0;
+      }
+    }
+
+    &--answer {
+      background-color: $evidentiq-green;
+      color: $marvin-color-primary;
+    }
+
+    &--error {
+      color: $marvin-color-primary;
+      background-color: $marvin-color-error;
+    }
+
+    &--answer,
+    &--error,
+    &--query {
+      #{$self}__avatar {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-radius: 30px;
+      }
+    }
+  }
+
+  &__items {
+    margin-top: 15px;
+
+    &:last-of-type {
+      margin-top: 0;
+    }
+  }
+
+  &__dots {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 7.5px;
+    height: 7.5px;
+    border-radius: 5px;
+    background-color: $marvin-color-primary;
+    color: $marvin-color-primary;
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0.5s;    
+
+    &::after,
+    &:before {
+      content: "";
+      display: inline-block;
+      position: absolute;
+      top: 0;
+    }
+
+    &:before {
+      left: -12.5px;
+      width: 7.5px;
+      height: 7.5px;
+      border-radius: 5px;
+      background-color: $marvin-color-primary;
+      color: $marvin-color-primary;
+      animation: dot-flashing 1s infinite alternate;
+      animation-delay: 0s;
+    }
+
+    &:after {
+      left: 12.5px;
+      width: 7.5px;
+      height: 7.5px;
+      border-radius: 5px;
+      background-color: $marvin-color-primary;
+      color: $marvin-color-primary;
+      animation: dot-flashing 1s infinite alternate;
+      animation-delay: 1s;
+    }
+  }
+}
+
+.chat::-webkit-scrollbar {
+  width: 10px;
+}
+
+.chat::-webkit-scrollbar-track {
+  background: $marvin-color-white;
+}
+
+.chat::-webkit-scrollbar-thumb {
+  background: $marvin-color-alto;
+}
+
+.chat::-webkit-scrollbar-thumb:hover {
+  background: $marvin-color-secondary-hover;
+}
+
+
+@keyframes blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+@keyframes dot-flashing {
+  0% {
+    background-color: $marvin-color-primary;
+  }
+  50%, 100% {
+    background-color: rgba(152, 128, 255, 0.2);
+  }
+}
