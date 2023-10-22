@@ -235,8 +235,10 @@ const sendQuery = (e: Event, currentQuery: IQuery) => {
   };
 
   const headers = new Headers({
-    'Access-Control-Allow-Credentials': 'true',
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Allow-Headers': 'Origin, Content-Type, X-Auth-Token',             
+    'Access-Control-Allow-Origin': '*' ,
   });
 
   headers.append('Authorization', `Bearer ${import.meta.env.VITE_DIFY_SECRET}`);
@@ -244,6 +246,7 @@ const sendQuery = (e: Event, currentQuery: IQuery) => {
   const requestOptions = {
     method: 'POST',
     headers: headers,
+    response_mode: 'streaming',
     signal: signal.value,
     body: JSON.stringify(requestBody),
   };
