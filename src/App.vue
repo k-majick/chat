@@ -1,7 +1,7 @@
 <template>
   <div 
     v-if="Object.keys(userData).length" 
-    class="chat__container" 
+    class="chat__container"
     :class="{ 'chat__container--expanded': isExpanded, 'chat__container--open': isOpen }"
   >
     <div class="chat__bar chat__bar--main">
@@ -39,6 +39,15 @@
     </div>
     <div class="chat">
       <div class="chat__box">
+        <button 
+          v-if="isLoading || isTyping"
+          class="chat__control chat__control--stop"
+          @click="stopResponding"
+        >
+          <font-awesome-icon
+            :icon="faCircleStop"
+          />&nbsp;Stop responding
+        </button>
         <div 
           class="chat__items" 
           v-for="(item, index) in items"
@@ -68,13 +77,14 @@
           <div 
             v-show="item.hasError"
             class="chat__item chat__item--error"
-          > 
+          >
             Error
             <div class="chat__avatar chat__avatar--marvin"></div>
           </div>
         </div>
       </div>
     </div>
+    <!-- how can i create subject in marvin -->
     <div class="chat__bar chat__bar--input">
       <textarea
         v-model="query"
@@ -103,6 +113,7 @@ import {
   faCircleQuestion,
   faPaperPlaneTop,
   faUser,
+  faCircleStop,
 } from '@fortawesome/pro-duotone-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -120,18 +131,23 @@ const isOpen = ref(true);
 const isExpanded = ref(false);
 const isLoading = ref(false);
 const isTyping = ref(false);
-const itemsRef = ref([]);
+const isStopped = ref(false);
+const itemsRef: Ref<string[]> = ref([]);
 const query = ref('');
 const itemKey = ref(0);
 const items: Ref<IQuery[]> = ref([]);
 const BASE_API_URL_DEV = '/api/chat-messages';
 const BASE_API_URL_PROD = 'https://api.dify.ai/api/chat-messages';
 
+const controller = ref(new AbortController());
+const signal = ref(controller.value.signal);
+
 const displayAnswer = (data: string): Promise<void> => {
   let promise = Promise.resolve();
   const jsonObjects: string[] = data.split('\ndata: ');
 
   jsonObjects.shift();
+  isLoading.value = false;
   isTyping.value = true;
 
   const parsedObjects = jsonObjects.map((jsonStr) => {
@@ -146,6 +162,13 @@ const displayAnswer = (data: string): Promise<void> => {
     promise = promise.then(() => {
       if (!o.answer) {
         return;
+      }
+
+      if (isStopped.value) {
+        delete items.value[0].answer;
+        isStopped.value = false;
+        isTyping.value = false;
+        return promise;
       }
 
       items.value[0].answer += o.answer.replace(/\n/g, '<br>');
@@ -221,6 +244,7 @@ const sendQuery = (e: Event, currentQuery: IQuery) => {
   const requestOptions = {
     method: 'POST',
     headers: headers,
+    signal: signal.value,
     body: JSON.stringify(requestBody),
   };
 
@@ -236,17 +260,36 @@ const sendQuery = (e: Event, currentQuery: IQuery) => {
 
     .then((data) => {
       nextTick(() => {
-        displayAnswer(data).then(() => {
-          isLoading.value = false;
+        displayAnswer(data).then(() => {          
           isTyping.value = false;
         });
       });
     })
 
     .catch((error) => {
+      if (isStopped.value) {
+        isStopped.value = false;
+        controller.value = new AbortController();
+        signal.value = controller.value.signal;
+        return;
+      }
       displayError();
       console.error('Error:', error);
     });
+}
+
+const abortFetching = () => {
+  controller.value.abort();
+  items.value[0].answer = "";
+  isLoading.value = false;
+}
+
+const stopResponding = () => {
+  isStopped.value = true;
+
+  if (isLoading.value) {
+    abortFetching();
+  }
 }
 </script>
 

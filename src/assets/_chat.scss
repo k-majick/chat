@@ -23,6 +23,8 @@
 
         #{$self} {
           overflow-y: scroll;
+          display: flex;
+          flex-direction: column-reverse;
           max-height: 640px;
           min-height: 240px;
           height: auto;
@@ -72,6 +74,25 @@
 
         #{$self}__controls {
           position: relative;
+        }
+      }
+    }
+  }
+
+  &__box {
+    #{$self}__control {
+      &--stop {
+        align-self: center;
+        background: none;
+        border: 1px solid $marvin-color-alto;
+        border-radius: 7.5px;
+        color: $marvin-color-gray;
+        margin-top: 15px;
+        padding: 7.5px 15px;
+        cursor: pointer;
+
+        &:hover {
+          color: $marvin-color-primary;
         }
       }
     }
